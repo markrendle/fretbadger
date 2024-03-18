@@ -1,0 +1,54 @@
+﻿@page "/fretboard/{tuning}"
+@page "/fretboard/{tuning}/scale/{scales}"
+@page "/fretboard/{tuning}/mode/{modes}"
+@page "/fretboard/{tuning}/arpeggio/{arpeggios}"
+@page "/fretboard/{tuning}/note/{notes}"
+@using FretBadger.Client.Services
+@using FretBadger.Music.NoteTypes
+@using Fretboard = FretBadger.Fretboards.Fretboard
+@rendermode InteractiveWebAssembly
+
+@foreach (var model in Models)
+{
+    <Fretboard Model="model"></Fretboard>
+}
+
+@code {
+    [Parameter]
+    public string? Tuning { get; set; }
+    [Parameter]
+    public string? Scales { get; set; }
+    [Parameter]
+    public string? Modes { get; set; }
+    [Parameter]
+    public string? Arpeggios { get; set; }
+    [Parameter]
+    public string? Notes { get; set; }
+    
+    private string? Alert { get; set; }
+
+    private List<FretboardViewModel> Models { get; } = new();
+
+    protected override void OnInitialized()
+    {
+        if (Tuning is { Length: > 0 })
+        {
+            Note[] notes;
+            try
+            {
+                notes = Tunings.Parse(Tuning);
+            }
+            catch (MusicException)
+            {
+                Alert = "Invalid note";
+                return;
+            }
+            
+            var fretboard = Fretboard.Create(12, notes);
+            var viewModel = new FretboardViewModel(fretboard, [], "default", Tuning);
+            Models.Add(viewModel);
+        }
+
+    }
+
+}

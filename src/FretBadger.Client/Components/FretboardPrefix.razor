@@ -1,0 +1,16 @@
+﻿@if (Fret is not null)
+{
+<div class="fretboard-prefix">
+  <div class="fretboard-top"></div>
+  @foreach (var fs in Fret.Strings)
+  {
+    <div class="fretboard-prefix-note">@fs.Note.Display</div>
+  }
+  <div class="fretboard-bottom"></div>
+</div>
+}
+
+@code {
+  [Parameter]
+  public Fret? Fret { get; set; }
+}

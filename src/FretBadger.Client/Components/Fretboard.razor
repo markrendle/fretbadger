@@ -1,0 +1,45 @@
+﻿@using FretBadger.Client.Models
+
+@if (Model is not null)
+{
+<div class="fretboard-container card p-2 p-sm-1">
+  <div class="d-flex">
+    <div class="flex-fill">
+      <span class="fs-4 mx-1">
+        @Model.Title
+        @if (Model.Notes is {Length: > 0})
+        {
+          <span>::</span>
+          @foreach (var note in Model.Notes)
+          {
+            <span class="note mx-1 color-@note.Text"> @note.Display </span>
+          }
+        }
+      </span>
+    </div>
+    <div class="mx-2 mt-1"><a href="#" @onclick="() => RemoveClicked(Model.Id)" class="text-decoration-none">&#x2A09;</a></div>
+  </div>
+  <hr/>
+  <div class="fretboard" id="fb-@Model.Id">
+    <FretboardPrefix Fret="Model.OpenFret"></FretboardPrefix>
+    <OpenFret Fret="Model.OpenFret"></OpenFret>
+    @foreach (var fret in Model.Fretboard.Frets.Skip(1))
+    {
+      <FretColumn Fret="fret"></FretColumn>
+    }
+  </div>
+</div>
+}
+
+@code {
+  
+  [Parameter] public FretboardViewModel? Model { get; set; }
+
+  [Parameter] public EventCallback<string> OnRemoveClick { get; set; }
+
+  private ValueTask RemoveClicked(string modelId)
+  {
+    return new ValueTask(OnRemoveClick.InvokeAsync(modelId));
+  }
+
+}

@@ -1,0 +1,22 @@
+﻿<div class="fret">
+    <div class="fretboard-top">
+        @* Inlay *@
+    </div>
+    @if (Fret is not null)
+    {
+        @foreach (var fs in Fret.Strings)
+        {
+            <FretCell FretString="fs" BackgroundClass="fret-string" Index="fs.Index ?? 0"></FretCell>
+        }
+    }
+    <div class="fretboard-bottom">
+        @* Inlay *@
+    </div>
+</div>
+
+@code {
+  
+    [Parameter]
+    public Fretboards.Fret? Fret { get; set; }
+    
+}

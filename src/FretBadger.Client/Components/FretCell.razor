@@ -1,0 +1,19 @@
+﻿<div class="@BackgroundClass color-@FretString?.Note.Text" data-fret-index="@Index">
+  @if (FretString?.Badge is { Length: > 0 })
+  {
+    var cls = FretString.IsRoot ? "fret-badge fret-badge-root" : "fret-badge";
+    <span class="@cls">@FretString.Badge</span>
+  }
+</div>
+
+@code {
+  
+    [Parameter]
+    public FretString? FretString { get; set; }
+    
+    [Parameter]
+    public string? BackgroundClass { get; set; }
+    
+    [Parameter]
+    public int Index { get; set; }
+}

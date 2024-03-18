@@ -1,0 +1,17 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <RootNamespace>FretBadger.Music</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="Data\arpeggios.csv" />
+    <EmbeddedResource Include="Data\arpeggios.csv" />
+    <None Remove="Data\scales.csv" />
+    <EmbeddedResource Include="Data\scales.csv" />
+  </ItemGroup>
+
+</Project>
