@@ -3,7 +3,7 @@ using FretBadger.Music.NoteTypes;
 
 namespace FretBadger.Fretboards;
 
-public class Fretboard
+public partial class Fretboard
 {
     private readonly Fret[] _frets;
 
