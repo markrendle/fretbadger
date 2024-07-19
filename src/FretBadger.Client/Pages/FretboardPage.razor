@@ -14,17 +14,12 @@
 }
 
 @code {
-    [Parameter]
-    public string? Tuning { get; set; }
-    [Parameter]
-    public string? Scales { get; set; }
-    [Parameter]
-    public string? Modes { get; set; }
-    [Parameter]
-    public string? Arpeggios { get; set; }
-    [Parameter]
-    public string? Notes { get; set; }
-    
+    [Parameter] public string? Tuning { get; set; }
+    [Parameter] public string? Scales { get; set; }
+    [Parameter] public string? Modes { get; set; }
+    [Parameter] public string? Arpeggios { get; set; }
+    [Parameter] public string? Notes { get; set; }
+
     private string? Alert { get; set; }
 
     private List<FretboardViewModel> Models { get; } = new();
@@ -43,12 +38,76 @@
                 Alert = "Invalid note";
                 return;
             }
-            
+
             var fretboard = Fretboard.Create(12, notes);
             var viewModel = new FretboardViewModel(fretboard, [], "default", Tuning);
+
+            if (Scales is { Length: > 0 })
+            {
+                ApplyScales(viewModel, Scales);
+            }
+
             Models.Add(viewModel);
         }
+    }
 
+    private void ApplyScales(FretboardViewModel viewModel, string scales)
+    {
+        var scaleId = scales.Split('+').First();
+        var scaleSetId = scaleId.Split('-')[1];
+        var scaleSet = Music.Scales.FindById(scaleSetId);
+        if (scaleSet is null) return;
+        if (Note.TryParse(scaleId.Split('-')[0], out var note))
+        {
+            var scale = scaleSet!.Get(note);
+            foreach (var fretboardFret in viewModel.Fretboard.Frets)
+            {
+                foreach (var fretString in fretboardFret.Strings)
+                {
+                    if (fretString.Note == note)
+                    {
+                        fretString.IsRoot = true;
+                    }
+                    else if (scale.AsSpan().Contains(fretString.Note))
+                    {
+                        fretString.Badge = fretString.Note.Display;
+                    }
+                    else
+                    {
+                        fretString.Badge = string.Empty;
+                    }
+                }
+            }
+        }
+    }
+
+    private void ApplyModes(FretboardViewModel viewModel, string modes)
+    {
+        var modeId = modes!.Split('+').First();
+        var scaleSetId = modeId.Split('-')[1];
+        var scaleSet = Music.Scales.FindById(scaleSetId);
+        if (Note.TryParse(modeId.Split('-')[0], out var note))
+        {
+            var scale = scaleSet!.Get(note);
+            foreach (var fretboardFret in viewModel.Fretboard.Frets)
+            {
+                foreach (var fretString in fretboardFret.Strings)
+                {
+                    if (fretString.Note == note)
+                    {
+                        fretString.IsRoot = true;
+                    }
+                    else if (scale.AsSpan().Contains(fretString.Note))
+                    {
+                        fretString.Badge = fretString.Note.Display;
+                    }
+                    else
+                    {
+                        fretString.Badge = string.Empty;
+                    }
+                }
+            }
+        }
     }
 
 }
